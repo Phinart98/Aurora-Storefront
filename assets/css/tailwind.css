@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #DC2626;
+    --color-secondary: #FFFFFF;
+    --color-dark: #1A1A1A;
+  }
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
