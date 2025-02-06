@@ -40,7 +40,7 @@ export default defineNuxtConfig({
 
   vuefire: {
     config: {
-      apiKey: "AIzaSyAc19X9IXXDf0oTIg6HvJaPAxTVPY2bvh8",
+      apiKey: process.env.FIREBASE_API_KEY,
       authDomain: "cuisine-storefront.firebaseapp.com",
       databaseURL:
         "https://cuisine-storefront-default-rtdb.europe-west1.firebasedatabase.app",
