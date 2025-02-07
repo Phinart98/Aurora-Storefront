@@ -8,7 +8,11 @@
             <span class="text-xl font-bold text-primary-dark">Shnell's Kitchen</span>
           </NuxtLink>
           <div class="flex items-center gap-4">
-            <NuxtLink to="/" class="flex items-center text-dark hover:text-primary">
+            <NuxtLink
+              to="/"
+              class="flex items-center text-dark hover:text-primary"
+              exact-active-class="text-primary font-bold"
+            >
               <i class="bi bi-book me-1"></i>
               <span>Menu</span>
             </NuxtLink>

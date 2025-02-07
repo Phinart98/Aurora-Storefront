@@ -18,6 +18,8 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    adminUsername: process.env.ADMIN_USERNAME,
+    adminPassword: process.env.ADMIN_PASSWORD,
     public: {
       cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
       cloudinaryUploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,

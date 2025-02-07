@@ -41,14 +41,20 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRuntimeConfig } from '#app'
 
 const emit = defineEmits(['login'])
 const username = ref('')
 const password = ref('')
 const error = ref('')
+const config = useRuntimeConfig()
 
 const handleLogin = () => {
-  if (username.value === 'admin' && password.value === 'admin') {
+  // Use runtime config for admin credentials
+  if (
+    username.value === config.adminUsername &&
+    password.value === config.adminPassword
+  ) {
     emit('login', true)
   } else {
     error.value = 'Invalid credentials'
