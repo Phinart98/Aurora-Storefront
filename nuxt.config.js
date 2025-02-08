@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "nuxt-vuefire",
     "@nuxtjs/cloudinary",
+    'nuxt-gtag'
   ],
 
   plugins: ["~/plugins/toast.client.ts"],
@@ -55,6 +56,10 @@ export default defineNuxtConfig({
 
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+  },
+
+  gtag: {
+    id: 'G-RFM9MM6YL2'
   },
 
   compatibilityDate: "2025-02-05",
