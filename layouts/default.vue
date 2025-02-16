@@ -4,8 +4,8 @@
       <nav class="w-full px-6 md:px-8 lg:px-10 py-3">
         <div class="flex justify-between items-center">
           <NuxtLink to="/" class="flex items-center gap-2">
-            <img src="~/assets/logo.jpeg" alt="Shnell's Kitchen Logo" class="h-8 w-8" />
-            <span class="text-xl font-bold text-primary-dark">Shnell's Kitchen</span>
+            <img src="~/assets/logo.jpg" alt="Shnell's Kitchen Logo" class="h-8 w-8" />
+            <span class="text-xl font-bold text-primary-dark">Aurora Store</span>
           </NuxtLink>
           <div class="flex items-center gap-4">
             <NuxtLink
@@ -16,12 +16,12 @@
               <i class="bi bi-book me-1"></i>
               <span>Menu</span>
             </NuxtLink>
-            <NuxtLink to="/cart" class="flex items-center text-dark hover:text-primary relative">
+            <NuxtLink to="/cart" class="flex items-center text-dark hover:text-primary relative" exact-active-class="text-primary font-bold">
               <i class="bi bi-cart me-1"></i>
               <span>Cart</span>
               <span
                 v-if="cartStore.itemCount"
-                class="absolute -top-2 -right-2 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                class="absolute -top-2 -right-4 bg-primary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
               >
                 {{ cartStore.itemCount }}
               </span>

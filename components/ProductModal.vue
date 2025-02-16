@@ -3,7 +3,7 @@
     <div class="p-4 md:p-6">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-lg md:text-xl font-bold text-primary-dark">
-          {{ isEdit ? 'Edit Cuisine' : 'Add New Cuisine' }}
+          {{ isEdit ? 'Edit Product' : 'Add New Product' }}
         </h2>
         <button @click="$emit('close')" class="text-accent hover:text-primary">
           <i class="bi bi-x-lg"></i>
@@ -20,6 +20,30 @@
             class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
           >
         </div>
+
+        <!-- <div>
+          <label class="block text-sm font-medium text-accent mb-1">Category</label>
+          <select 
+            v-model="formData.category"
+            required
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
+          >
+            <option value="">Select a category</option>
+            <option v-for="category in categories" :key="category" :value="category">
+              {{ category }}
+            </option>
+          </select>
+        </div> -->
+
+        <!-- <div>
+          <label class="block text-sm font-medium text-accent mb-1">SKU</label>
+          <input 
+            v-model="formData.sku" 
+            type="text" 
+            placeholder="Optional - Will be auto-generated if empty"
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
+          >
+        </div> -->
 
         <div>
           <label class="block text-sm font-medium text-accent mb-1">Description</label>
@@ -96,15 +120,21 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useProductStore } from '~/stores/products'
 import BaseModal from './BaseModal.vue'
 
+const productStore = useProductStore()
+const categories = computed(() => productStore.categories)
+
 const props = defineProps({
-  cuisine: {
+  product: {
     type: Object,
     default: () => ({
       name: '',
       description: '',
       price: 0,
+      category: '',
+      sku: '',
       isAvailable: true,
       image: ''
     })
@@ -116,7 +146,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close', 'submit'])
-const formData = ref({ ...props.cuisine })
+const formData = ref({ ...props.product })
 const imageFile = ref(null)
 const loading = ref(false)
 const error = ref('')

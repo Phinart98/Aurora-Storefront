@@ -2,27 +2,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Create theme variables that can be easily swapped
         primary: {
-          DEFAULT: '#DC2626',
-          light: '#FEE2E2',
-          dark: '#991B1B',
+          DEFAULT: "var(--color-primary)",
+          light: "var(--color-primary-light)",
+          dark: "var(--color-primary-dark)",
         },
         secondary: {
-          DEFAULT: '#FFFFFF',
-          dark: '#F3F4F6',
+          DEFAULT: "var(--color-secondary)",
+          dark: "var(--color-secondary-dark)",
         },
         accent: {
-          DEFAULT: '#1F2937',
-          light: '#4B5563',
-        }
+          DEFAULT: "var(--color-accent)",
+          light: "var(--color-accent-light)",
+        },
       },
       fontFamily: {
-        sans: ['Poppins', 'Helvetica', 'Arial', 'sans-serif'],
+        sans: ["Poppins", "Helvetica", "Arial", "sans-serif"],
       },
       boxShadow: {
-        card: '0 4px 6px -1px rgba(220, 38, 38, 0.1)',
-      }
-    }
+        card: "0 4px 6px -1px rgba(220, 38, 38, 0.1)",
+      },
+    },
   },
   plugins: [],
-}
+};

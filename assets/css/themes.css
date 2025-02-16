@@ -1,0 +1,65 @@
+/* Default Theme */
+.theme-default {
+  --color-primary: #DC2626;
+  --color-primary-light: #FEE2E2;
+  --color-primary-dark: #991B1B;
+  --color-secondary: #FFFFFF;
+  --color-secondary-dark: #F3F4F6;
+  --color-accent: #1F2937;
+  --color-accent-light: #4B5563;
+}
+
+/* Fashion Theme */
+.theme-fashion {
+  --color-primary: #6366F1;
+  --color-primary-light: #E0E7FF;
+  --color-primary-dark: #4338CA;
+  --color-secondary: #FFFFFF;
+  --color-secondary-dark: #F4F4F5;
+  --color-accent: #27272A;
+  --color-accent-light: #52525B;
+}
+
+/* Electronics Theme */
+.theme-electronics {
+  --color-primary: #059669;
+  --color-primary-light: #D1FAE5;
+  --color-primary-dark: #047857;
+  --color-secondary: #FFFFFF;
+  --color-secondary-dark: #F1F5F9;
+  --color-accent: #0F172A;
+  --color-accent-light: #334155;
+}
+
+/* Luxury Theme */
+.theme-luxury {
+  --color-primary: #B45309;
+  --color-primary-light: #FEF3C7;
+  --color-primary-dark: #92400E;
+  --color-secondary: #FFFFFF;
+  --color-secondary-dark: #F5F5F4;
+  --color-accent: #292524;
+  --color-accent-light: #57534E;
+}
+
+/* Dark Theme */
+.theme-dark {
+  --color-primary: #8B5CF6;
+  --color-primary-light: #EDE9FE;
+  --color-primary-dark: #6D28D9;
+  --color-secondary: #1F2937;
+  --color-secondary-dark: #111827;
+  --color-accent: #F9FAFB;
+  --color-accent-light: #E5E7EB;
+}
+
+/* Nature Theme */
+.theme-nature {
+  --color-primary: #65A30D;
+  --color-primary-light: #ECFCCB;
+  --color-primary-dark: #4D7C0F;
+  --color-secondary: #FFFFFF;
+  --color-secondary-dark: #F7FEE7;
+  --color-accent: #365314;
+  --color-accent-light: #3F6212;
+}

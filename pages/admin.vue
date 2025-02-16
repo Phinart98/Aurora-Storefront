@@ -49,7 +49,7 @@
           class="flex-1 md:flex-none bg-primary text-secondary px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors duration-300 flex items-center justify-center gap-2"
         >
           <i class="bi bi-plus-circle"></i>
-          Add New Cuisine
+          Add New Product
         </button>
         <button 
           @click="logout" 
@@ -61,32 +61,32 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="cuisine in cuisines" :key="cuisine.id" 
+      <div v-for="product in products" :key="product.id" 
            class="bg-secondary-dark p-4 rounded-lg shadow-card">
         <div class="relative">
-          <img :src="cuisine.image" :alt="cuisine.name" class="w-full h-36 md:h-48 object-cover rounded mb-4">
+          <img :src="product.image" :alt="product.name" class="w-full h-36 md:h-48 object-cover rounded mb-4">
           <span 
             :class="[
-              'absolute top-2 right-2 px-2 py-1 rounded text-xs md:text-sm text-secondary',
-              cuisine.isAvailable ? 'bg-green-500' : 'bg-primary'
+              'absolute top-2 right-2 px-2 py-1 rounded text-xs md:text-sm text-white',
+              product.isAvailable ? 'bg-green-500' : 'bg-red-500'
             ]"
           >
-            {{ cuisine.isAvailable ? 'Available' : 'Not Available' }}
+            {{ product.isAvailable ? 'Available' : 'Not Available' }}
           </span>
         </div>
-        <h3 class="font-semibold text-primary-dark text-base md:text-lg">{{ cuisine.name }}</h3>
-        <p class="text-accent-light text-sm mt-1 line-clamp-2">{{ cuisine.description }}</p>
-        <p class="font-bold text-primary-dark mt-2 text-base md:text-lg">GH₵{{ cuisine.price.toFixed(2) }}</p>
+        <h3 class="font-semibold text-primary-dark text-base md:text-lg">{{ product.name }}</h3>
+        <p class="text-accent-light text-sm mt-1 line-clamp-2">{{ product.description }}</p>
+        <p class="font-bold text-primary-dark mt-2 text-base md:text-lg">GH₵{{ product.price.toFixed(2) }}</p>
         <div class="flex gap-2 mt-4">
           <button 
-            @click="editCuisine(cuisine)" 
+            @click="editProduct(product)" 
             class="flex-1 bg-primary/10 text-primary px-3 py-2 rounded hover:bg-primary/20 transition-colors duration-300 flex items-center justify-center gap-1 text-sm md:text-base"
           >
             <i class="bi bi-pencil"></i>
             Edit
           </button>
           <button 
-            @click="removeCuisine(cuisine.id)" 
+            @click="removeProduct(product.id)" 
             class="flex-1 bg-red-500/10 text-red-500 px-3 py-2 rounded hover:bg-red-500/20 transition-colors duration-300 flex items-center justify-center gap-1 text-sm md:text-base"
           >
             <i class="bi bi-trash"></i>
@@ -96,10 +96,10 @@
       </div>
     </div>
 
-    <CuisineModal 
+    <ProductModal 
       v-if="showModal" 
-      :cuisine="selectedCuisine"
-      :is-edit="!!selectedCuisine"
+      :product="selectedProduct"
+      :is-edit="!!selectedProduct"
       @close="closeModal"
       @submit="handleSubmit"
     />
@@ -109,21 +109,21 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useCuisineStore } from '~/stores/cuisines'
+import { useProductStore } from '~/stores/products'
 
 const username = ref('')
 const password = ref('')
 const error = ref('')
 const isLoggedIn = ref(false)
 const showModal = ref(false)
-const selectedCuisine = ref(null)
-const cuisineStore = useCuisineStore()
-const { list: cuisines } = storeToRefs(cuisineStore)
+const selectedProduct = ref(null)
+const productStore = useProductStore()
+const { list: products } = storeToRefs(productStore)
 
 onMounted(() => {
   isLoggedIn.value = localStorage.getItem('isAdmin') === 'true'
   if (isLoggedIn.value) {
-    cuisineStore.fetchCuisines()
+    productStore.fetchProducts()
   }
 })
 
@@ -132,7 +132,7 @@ const handleLogin = () => {
     localStorage.setItem('isAdmin', 'true')
     isLoggedIn.value = true
     error.value = ''
-    cuisineStore.fetchCuisines()
+    productStore.fetchProducts()
   } else {
     error.value = 'Invalid credentials'
   }
@@ -145,20 +145,20 @@ const logout = () => {
 
 const closeModal = () => {
   showModal.value = false
-  selectedCuisine.value = null
+  selectedProduct.value = null
 }
 
-const editCuisine = (cuisine) => {
-  selectedCuisine.value = cuisine
+const editProduct = (product) => {
+  selectedProduct.value = product
   showModal.value = true
 }
 
 const handleSubmit = async ({ formData, imageFile }) => {
   try {
-    if (selectedCuisine.value) {
-      await cuisineStore.updateCuisine(selectedCuisine.value.id, formData, imageFile)
+    if (selectedProduct.value) {
+      await productStore.updateProduct(selectedProduct.value.id, formData, imageFile)
     } else {
-      await cuisineStore.addCuisine(formData, imageFile)
+      await productStore.addProduct(formData, imageFile)
     }
     closeModal()
   } catch (error) {
@@ -166,9 +166,9 @@ const handleSubmit = async ({ formData, imageFile }) => {
   }
 }
 
-const removeCuisine = async (cuisineId) => {
-  if (confirm('Are you sure you want to delete this cuisine?')) {
-    await cuisineStore.deleteCuisine(cuisineId)
+const removeProduct = async (productId) => {
+  if (confirm('Are you sure you want to delete this product?')) {
+    await productStore.deleteProduct(productId)
   }
 }
 </script>

@@ -11,17 +11,17 @@ export const useCartStore = defineStore('cart', {
   },
 
   actions: {
-    addItem(cuisine) {
-      const existingItem = this.items.find(item => item.id === cuisine.id)
+    addItem(product) {
+      const existingItem = this.items.find(item => item.id === product.id)
       if (existingItem) {
         existingItem.quantity++
       } else {
-        this.items.push({ ...cuisine, quantity: 1 })
+        this.items.push({ ...product, quantity: 1 })
       }
     },
 
-    removeItem(cuisine) {
-      const index = this.items.findIndex(item => item.id === cuisine.id)
+    removeItem(product) {
+      const index = this.items.findIndex(item => item.id === product.id)
       if (index !== -1) {
         this.items.splice(index, 1)
       }

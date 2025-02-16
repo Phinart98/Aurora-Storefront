@@ -20,6 +20,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     adminUsername: process.env.ADMIN_USERNAME,
     adminPassword: process.env.ADMIN_PASSWORD,
+    cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+    cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET,
     public: {
       cloudinaryCloudName: process.env.CLOUDINARY_CLOUD_NAME,
       cloudinaryUploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET,
@@ -27,8 +29,9 @@ export default defineNuxtConfig({
   },
 
   css: [
-    "~/assets/css/tailwind.css",
-    "bootstrap-icons/font/bootstrap-icons.css",
+    '~/assets/css/tailwind.css',
+    '~/assets/css/themes.css',
+    'bootstrap-icons/font/bootstrap-icons.css',
   ],
 
   modules: [
