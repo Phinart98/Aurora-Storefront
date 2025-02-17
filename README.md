@@ -15,7 +15,6 @@ Welcome to Aurora Storefront – a minimal Nuxt-based product storefront project
 - [Cloudinary Integration](#cloudinary-integration)
 - [Themes](#themes)
 - [Admin Panel](#admin-panel)
-- [Project Structure](#project-structure)
 
 
 ## Setup & Installation
@@ -115,39 +114,6 @@ Access the admin panel at /admin:
 Admin Login: You can log in using the credentials specified in the .env file.
 CRUD Operations: Admins can add, update, and delete products. When products are deleted or updated (with a new image), the corresponding images are handled on Cloudinary automatically.
 Security: A middleware (middleware/admin.js) and the AdminLogin.vue component are used to control access.
-
-
-## Project Structure
-├── app.vue                   # Root component that sets up the theme and layout
-├── nuxt.config.js            # Nuxt configuration including runtime configuration and modules
-├── .env                      # Environment variables for Firebase and Cloudinary 
-├── assets
-│   ├── css
-│   │   ├── tailwind.css      # Tailwind CSS configuration
-│   │   └── themes.css        # Custom theme definitions using CSS variables
-├── components
-│   ├── AdminLogin.vue        # Admin login component
-│   ├── BaseModal.vue         # Basic modal component for dialogs
-│   ├── ProductCard.vue       # Component to display a product
-│   ├── ProductModal.vue      # Modal for adding/editing products
-│   └── ZoomableImage.vue     # Image component with zoom functionality  
-├── composables
-│   └── useTheme.ts           # Composable to manage and switch themes
-├── middleware
-│   └── admin.js              # Middleware for admin route protection
-├── pages
-│   ├── admin.vue             # Admin panel page
-│   ├── cart.vue              # Cart page
-│   ├── index.vue             # Main storefront page
-│   └── toast.vue             # Page to test toast notifications
-├── plugins
-│   └── toast.client.ts       # Plugin for custom toast notifications
-├── server
-│   └── api
-│       └── deleteImage.js    # API endpoint to delete Cloudinary images securely
-└── stores
-    ├── cart.js               # Store for managing shopping cart state
-    └── products.js           # Store for product data and Cloudinary operations
 
 
 Happy coding and enjoy building with Aurora Storefront!
