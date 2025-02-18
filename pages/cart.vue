@@ -50,9 +50,9 @@ const removeFromCart = (item) => {
 const checkout = () => {
   if (cartItems.value.length === 0) return
   
-  let message = "Hello, I would like to place an order:\n"
+  let message = "Hello, I would like to place an order:\n\n"
   cartItems.value.forEach((item) => {
-    message += `${item.name} - Quantity: ${item.quantity}, Subtotal: GH₵${(item.price * item.quantity).toFixed(2)}\n`
+    message += `${item.name} - Quantity: ${item.quantity}, Subtotal: GH₵${(item.price * item.quantity).toFixed(2)}\n\n`
   })
   message += `Total: GH₵${cartTotal.value.toFixed(2)}`
   
