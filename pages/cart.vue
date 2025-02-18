@@ -56,6 +56,6 @@ const checkout = () => {
   })
   message += `Total: GH₵${cartTotal.value.toFixed(2)}`
   
-  window.location.href = `https://wa.me/233269817787?text=${encodeURIComponent(message)}`
+  window.location.href = `https://wa.me/233546784566?text=${encodeURIComponent(message)}`
 }
 </script>
