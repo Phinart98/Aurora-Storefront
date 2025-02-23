@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <header class="bg-white shadow-md w-full">
+    <header class="bg-white shadow-md w-full fixed top-0 z-50">
       <nav class="w-full px-6 md:px-8 lg:px-10 py-3">
         <div class="flex justify-between items-center">
           <NuxtLink to="/" class="flex items-center gap-2">
-            <img src="~/assets/logo.jpg" alt="Shnell's Kitchen Logo" class="h-8 w-8" />
-            <span class="text-xl font-bold text-primary-dark">Aurora Store</span>
+            <img :src="config.public.logoUrl" :alt="`${config.public.storeName} Logo`" class="h-8 w-8" />
+            <span class="text-xl font-bold text-primary-dark">{{ config.public.storeName }}</span>
           </NuxtLink>
           <div class="flex items-center gap-4">
             <NuxtLink
@@ -31,7 +31,7 @@
       </nav>
     </header>
 
-    <main class="w-full px-6 md:px-8 lg:px-10 py-6">
+    <main class="w-full px-6 md:px-8 lg:px-10 py-6 mt-[60px]">
       <slot />
     </main>
   </div>
@@ -40,4 +40,5 @@
 <script setup>
 import { useCartStore } from '~/stores/cart'
 const cartStore = useCartStore()
+const config = useRuntimeConfig()
 </script>

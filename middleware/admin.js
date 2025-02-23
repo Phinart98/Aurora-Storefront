@@ -1,10 +1,8 @@
-export default defineNuxtRouteMiddleware((to) => {
-  if (process.client && to.path === '/admin') {
-    const username = window.prompt('Enter username:')
-    const password = window.prompt('Enter password:')
-    
-    if (username !== 'admin' || password !== 'admin') {
-      return navigateTo('/')
+export default defineNuxtRouteMiddleware(async (to) => {
+  if (process.client && to.path.startsWith('/admin')) {
+    const session = useCookie('admin-session')
+    if (!session.value && to.path !== '/admin/login') {
+      return navigateTo('/admin/login')
     }
   }
 })

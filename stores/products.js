@@ -2,6 +2,40 @@ import { defineStore } from 'pinia'
 import { useDatabase } from 'vuefire'
 import { ref as dbRef, push, onValue, remove, update, get } from 'firebase/database'
 
+// Helper functions
+function extractPublicId(url) {
+  const parts = url.split('/upload/')
+  if (parts.length < 2) return null
+  const publicIdWithExtension = parts[1]
+  const withoutVersion = publicIdWithExtension.replace(/^v\d+\//, '')
+  const dotIndex = withoutVersion.lastIndexOf('.')
+  if (dotIndex === -1) return withoutVersion
+  return withoutVersion.substring(0, dotIndex)
+}
+
+async function deleteImageFromCloudinary(publicId) {
+  try {
+    const response = await fetch('/api/deleteImage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ publicId })
+    })
+
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(error.message || 'Failed to delete image')
+    }
+
+    const result = await response.json()
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to delete image from Cloudinary')
+    }
+  } catch (error) {
+    console.error('Image deletion error:', error)
+    throw error
+  }
+}
+
 export const useProductStore = defineStore('products', {
   state: () => ({
     list: [],
@@ -10,8 +44,9 @@ export const useProductStore = defineStore('products', {
 
   actions: {
     fetchProducts() {
+      const config = useRuntimeConfig()
       const db = useDatabase()
-      const productsRef = dbRef(db, 'products')
+      const productsRef = dbRef(db, `${config.public.storePrefix}/products`)
 
       onValue(productsRef, (snapshot) => {
         const data = snapshot.val()
@@ -25,7 +60,7 @@ export const useProductStore = defineStore('products', {
         }
       })
 
-      const categoriesRef = dbRef(db, 'categories')
+      const categoriesRef = dbRef(db, `${config.public.storePrefix}/categories`)
       onValue(categoriesRef, (snapshot) => {
         const data = snapshot.val()
         if (data) {
@@ -37,14 +72,16 @@ export const useProductStore = defineStore('products', {
     },
 
     async addCategory(categoryName) {
+      const config = useRuntimeConfig()
       const db = useDatabase()
-      const categoriesRef = dbRef(db, 'categories')
+      const categoriesRef = dbRef(db, `${config.public.storePrefix}/categories`)
       await push(categoriesRef, categoryName)
     },
 
     async removeCategory(categoryId) {
+      const config = useRuntimeConfig()
       const db = useDatabase()
-      const categoryRef = dbRef(db, `categories/${categoryId}`)
+      const categoryRef = dbRef(db, `${config.public.storePrefix}/categories/${categoryId}`)
       await remove(categoryRef)
     },
 
@@ -67,7 +104,7 @@ export const useProductStore = defineStore('products', {
         }
 
         const db = useDatabase()
-        const productsRef = dbRef(db, 'products')
+        const productsRef = dbRef(db, `${config.public.storePrefix}/products`)
 
         const productData = {
           name: product.name,
@@ -96,7 +133,6 @@ export const useProductStore = defineStore('products', {
         let imageUrl = product.image
 
         if (imageFile && imageFile.size > 0) {
-          // If an image exists, delete it from Cloudinary first
           if (product.image) {
             const publicId = extractPublicId(product.image)
             if (publicId) {
@@ -122,8 +158,9 @@ export const useProductStore = defineStore('products', {
           imageUrl = uploadResult.secure_url
         }
 
+        const config = useRuntimeConfig()
         const db = useDatabase()
-        const productRef = dbRef(db, `products/${id}`)
+        const productRef = dbRef(db, `${config.public.storePrefix}/products/${id}`)
         await update(productRef, {
           name: product.name,
           description: product.description,
@@ -146,8 +183,9 @@ export const useProductStore = defineStore('products', {
 
     async deleteProduct(productId) {
       try {
+        const config = useRuntimeConfig()
         const db = useDatabase()
-        const productRef = dbRef(db, `products/${productId}`)
+        const productRef = dbRef(db, `${config.public.storePrefix}/products/${productId}`)
 
         const snapshot = await get(productRef)
         const product = snapshot.val()
@@ -170,40 +208,3 @@ export const useProductStore = defineStore('products', {
     }
   }
 })
-
-// Helper to extract Cloudinary public_id from a URL
-function extractPublicId(url) {
-  // Assumes Cloudinary URLs include an "/upload/" segment
-  const parts = url.split('/upload/')
-  if (parts.length < 2) return null
-  const publicIdWithExtension = parts[1]
-  // Remove versioning if present (e.g., "v1671234567/")
-  const withoutVersion = publicIdWithExtension.replace(/^v\d+\//, '')
-  const dotIndex = withoutVersion.lastIndexOf('.')
-  if (dotIndex === -1) return withoutVersion
-  return withoutVersion.substring(0, dotIndex)
-}
-
-// Function to call our API endpoint to delete an image from Cloudinary
-async function deleteImageFromCloudinary(publicId) {
-  try {
-    const response = await fetch('/api/deleteImage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ publicId })
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.message || 'Failed to delete image')
-    }
-
-    const result = await response.json()
-    if (!result.success) {
-      throw new Error(result.error || 'Failed to delete image from Cloudinary')
-    }
-  } catch (error) {
-    console.error('Image deletion error:', error)
-    throw error
-  }
-}

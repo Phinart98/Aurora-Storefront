@@ -1,6 +1,6 @@
 <template>
   <div class="px-4 md:px-0">
-    <h1 class="text-xl md:text-2xl font-bold text-primary-dark mb-6">Our Menu</h1>
+    <h1 class="text-xl md:text-2xl font-bold text-primary-dark mb-6">Our Catalogue</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
       <ProductCard 
         v-for="product in availableProducts" 

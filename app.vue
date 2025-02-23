@@ -1,14 +1,11 @@
 <template>
-  <div :class="theme">
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <script setup>
-import { useTheme } from '~/composables/useTheme'
+const config = useRuntimeConfig()
 const { theme, setTheme } = useTheme()
-// Change this line to switch themes
-setTheme('default') // Use: 'default', 'fashion', 'electronics', 'luxury', 'dark', or 'nature'
+setTheme(config.public.storeTheme)
 </script>
