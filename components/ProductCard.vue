@@ -67,8 +67,8 @@ const decrementQuantity = () => {
 
 const addToCart = () => {
   cartStore.addItem({ ...props.product, quantity: quantity.value })
-  quantity.value = 1 // Reset quantity after adding to cart
   const { $successToast } = useNuxtApp()
-  $successToast(`Added ${quantity.value} ${props.product.name} to cart`)
+  $successToast(`Added ${quantity.value} of ${props.product.name} to cart`)
+  quantity.value = 1 // Reset quantity after adding to cart
 }
 </script>
