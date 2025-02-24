@@ -33,19 +33,18 @@ const chartData = computed(() => {
     return acc
   }, {})
 
-  const totalRevenue = Object.values(productSales).reduce((sum, { revenue }) => sum + revenue, 0)
   const topProducts = Object.entries(productSales)
     .sort((a, b) => b[1].revenue - a[1].revenue)
     .slice(0, 5)
     .map(([name, data]) => ({
       name,
-      percentage: (data.revenue / totalRevenue) * 100
+      revenue: data.revenue
     }))
 
   return {
     labels: topProducts.map(product => product.name),
     datasets: [{
-      label: 'Revenue Share',
+      label: 'Revenue',
       backgroundColor: [
         '#FF6B6B',
         '#4ECDC4',
@@ -53,7 +52,7 @@ const chartData = computed(() => {
         '#96CEB4',
         '#FFEEAD'
       ],
-      data: topProducts.map(product => product.percentage)
+      data: topProducts.map(product => product.revenue)
     }]
   }
 })
@@ -68,7 +67,7 @@ const chartOptions = {
     },
     tooltip: {
       callbacks: {
-        label: (context) => `${context.raw.toFixed(1)}% of total revenue`
+        label: (context) => `GH₵${context.raw.toFixed(2)}`
       }
     }
   },
@@ -76,7 +75,7 @@ const chartOptions = {
     x: {
       beginAtZero: true,
       ticks: {
-        callback: (value) => `${value}%`
+        callback: (value) => `GH₵${value}`
       }
     }
   }

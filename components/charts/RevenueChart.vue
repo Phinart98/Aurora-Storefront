@@ -21,7 +21,6 @@ const props = defineProps({
 const chartData = computed(() => {
   const dates = []
   const revenues = []
-  const totalRevenue = props.sales.reduce((sum, sale) => sum + sale.total, 0)
   
   const dailyRevenue = props.sales.reduce((acc, sale) => {
     const date = new Date(sale.timestamp).toLocaleDateString()
@@ -33,13 +32,13 @@ const chartData = computed(() => {
     .sort((a, b) => new Date(a[0]) - new Date(b[0]))
     .forEach(([date, revenue]) => {
       dates.push(date)
-      revenues.push((revenue / totalRevenue) * 100)
+      revenues.push(revenue)
     })
 
   return {
     labels: dates,
     datasets: [{
-      label: 'Revenue %',
+      label: 'Daily Revenue',
       backgroundColor: 'rgba(116, 185, 255, 0.2)',
       borderColor: '#4A90E2',
       pointBackgroundColor: '#FF6B6B',
@@ -60,7 +59,7 @@ const chartOptions = {
     },
     tooltip: {
       callbacks: {
-        label: (context) => `${context.raw.toFixed(1)}% of total revenue`
+        label: (context) => `GH₵${context.raw.toFixed(2)}`
       }
     }
   },
@@ -68,7 +67,7 @@ const chartOptions = {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: (value) => `${value}%`
+        callback: (value) => `GH₵${value}`
       }
     }
   }
