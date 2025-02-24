@@ -11,10 +11,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-// Override Chart.js defaults
-ChartJS.defaults.color = '#4B5563'
-ChartJS.defaults.borderColor = '#E5E7EB'
-
 const props = defineProps({
   sales: {
     type: Array,
@@ -28,15 +24,23 @@ const chartData = computed(() => {
     return acc
   }, {})
 
+  const total = Object.values(paymentMethods).reduce((sum, value) => sum + value, 0)
+  const percentages = Object.entries(paymentMethods).map(([method, value]) => ({
+    method: method.toUpperCase(),
+    value: value,
+    percentage: (value / total) * 100
+  }))
+
   return {
-    labels: Object.keys(paymentMethods).map(method => method.toUpperCase()),
+    labels: percentages.map(p => p.method),
     datasets: [{
-      data: Object.values(paymentMethods),
+      data: percentages.map(p => p.percentage),
+      rawData: percentages.map(p => p.value),
       backgroundColor: [
-        '#DC2626',
-        '#991B1B',
-        '#1F2937',
-        '#FEE2E2'
+        '#FF9F1C',
+        '#2EC4B6',
+        '#E71D36',
+        '#011627'
       ],
       borderColor: 'transparent'
     }]
@@ -57,7 +61,10 @@ const chartOptions = {
     },
     tooltip: {
       callbacks: {
-        label: (context) => `GH₵${context.raw.toFixed(2)}`
+        label: (context) => {
+          const value = context.dataset.rawData[context.dataIndex]
+          return `GH₵${value.toFixed(2)} (${context.raw.toFixed(1)}% of total revenue)`
+        }
       }
     }
   }

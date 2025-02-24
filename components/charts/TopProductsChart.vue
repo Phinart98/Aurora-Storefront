@@ -11,10 +11,6 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-// Override Chart.js defaults
-ChartJS.defaults.color = '#4B5563'
-ChartJS.defaults.borderColor = '#E5E7EB'
-
 const props = defineProps({
   sales: {
     type: Array,
@@ -37,22 +33,27 @@ const chartData = computed(() => {
     return acc
   }, {})
 
+  const totalRevenue = Object.values(productSales).reduce((sum, { revenue }) => sum + revenue, 0)
   const topProducts = Object.entries(productSales)
     .sort((a, b) => b[1].revenue - a[1].revenue)
     .slice(0, 5)
+    .map(([name, data]) => ({
+      name,
+      percentage: (data.revenue / totalRevenue) * 100
+    }))
 
   return {
-    labels: topProducts.map(([name]) => name),
+    labels: topProducts.map(product => product.name),
     datasets: [{
-      label: 'Revenue',
+      label: 'Revenue Share',
       backgroundColor: [
-        '#DC2626',
-        '#991B1B',
-        '#1F2937',
-        '#4B5563',
-        '#FEE2E2'
+        '#FF6B6B',
+        '#4ECDC4',
+        '#45B7D1',
+        '#96CEB4',
+        '#FFEEAD'
       ],
-      data: topProducts.map(([, data]) => data.revenue)
+      data: topProducts.map(product => product.percentage)
     }]
   }
 })
@@ -67,7 +68,7 @@ const chartOptions = {
     },
     tooltip: {
       callbacks: {
-        label: (context) => `GH₵${context.raw.toFixed(2)}`
+        label: (context) => `${context.raw.toFixed(1)}% of total revenue`
       }
     }
   },
@@ -75,7 +76,7 @@ const chartOptions = {
     x: {
       beginAtZero: true,
       ticks: {
-        callback: (value) => `GH₵${value}`
+        callback: (value) => `${value}%`
       }
     }
   }

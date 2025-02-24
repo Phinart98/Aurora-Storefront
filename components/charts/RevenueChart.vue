@@ -11,10 +11,6 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
-// Override Chart.js defaults
-ChartJS.defaults.color = '#4B5563'
-ChartJS.defaults.borderColor = '#E5E7EB'
-
 const props = defineProps({
   sales: {
     type: Array,
@@ -25,6 +21,7 @@ const props = defineProps({
 const chartData = computed(() => {
   const dates = []
   const revenues = []
+  const totalRevenue = props.sales.reduce((sum, sale) => sum + sale.total, 0)
   
   const dailyRevenue = props.sales.reduce((acc, sale) => {
     const date = new Date(sale.timestamp).toLocaleDateString()
@@ -36,17 +33,17 @@ const chartData = computed(() => {
     .sort((a, b) => new Date(a[0]) - new Date(b[0]))
     .forEach(([date, revenue]) => {
       dates.push(date)
-      revenues.push(revenue)
+      revenues.push((revenue / totalRevenue) * 100)
     })
 
   return {
     labels: dates,
     datasets: [{
-      label: 'Daily Revenue',
-      backgroundColor: '#FEE2E2',
-      borderColor: '#DC2626',
-      pointBackgroundColor: '#1F2937',
-      pointBorderColor: '#DC2626',
+      label: 'Revenue %',
+      backgroundColor: 'rgba(116, 185, 255, 0.2)',
+      borderColor: '#4A90E2',
+      pointBackgroundColor: '#FF6B6B',
+      pointBorderColor: '#4A90E2',
       data: revenues,
       fill: true,
       tension: 0.4
@@ -63,7 +60,7 @@ const chartOptions = {
     },
     tooltip: {
       callbacks: {
-        label: (context) => `GH₵${context.raw.toFixed(2)}`
+        label: (context) => `${context.raw.toFixed(1)}% of total revenue`
       }
     }
   },
@@ -71,7 +68,7 @@ const chartOptions = {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: (value) => `GH₵${value}`
+        callback: (value) => `${value}%`
       }
     }
   }
