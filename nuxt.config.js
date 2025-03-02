@@ -35,6 +35,7 @@ export default defineNuxtConfig({
       faviconUrl: process.env.STORE_FAVICON_URL,
       storePrefix: process.env.STORE_PREFIX,
       storeTheme: process.env.STORE_THEME,
+      storePhone: process.env.STORE_PHONE_NUMBER,
     },
   },
 

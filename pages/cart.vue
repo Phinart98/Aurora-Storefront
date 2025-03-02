@@ -40,6 +40,8 @@
 import { storeToRefs } from 'pinia'
 import { useCartStore } from '~/stores/cart'
 
+const config = useRuntimeConfig()
+
 const cartStore = useCartStore()
 const { items: cartItems, total: cartTotal } = storeToRefs(cartStore)
 
@@ -55,7 +57,7 @@ const checkout = () => {
     message += `${item.name} - Quantity: ${item.quantity}, Subtotal: GH₵${(item.price * item.quantity).toFixed(2)}\n\n`
   })
   message += `Total: GH₵${cartTotal.value.toFixed(2)}`
-  
-  window.location.href = `https://wa.me/233546784566?text=${encodeURIComponent(message)}`
+  console.log(`https://wa.me/${config.public.storePhone}?text=${encodeURIComponent(message)}`)
+  window.location.href = `https://wa.me/${config.public.storePhone}?text=${encodeURIComponent(message)}`
 }
 </script>
