@@ -1,47 +1,5 @@
 <template>
-  <div v-if="!isLoggedIn">
-    <div class="min-h-[80vh] flex items-center justify-center px-4 md:px-0">
-      <div class="bg-secondary p-6 md:p-8 rounded-lg shadow-card w-full max-w-md">
-        <h1 class="text-xl md:text-2xl font-bold text-primary-dark mb-6">Admin Login</h1>
-        
-        <form @submit.prevent="handleLogin" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-accent mb-1">Username</label>
-            <input 
-              v-model="username" 
-              type="text" 
-              required
-              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
-            >
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-accent mb-1">Password</label>
-            <input 
-              v-model="password" 
-              type="password" 
-              required
-              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
-            >
-          </div>
-
-          <div v-if="error" class="text-primary text-sm">
-            {{ error }}
-          </div>
-
-          <button 
-            type="submit"
-            class="w-full bg-primary text-secondary py-2 rounded-lg hover:bg-primary-dark transition-colors duration-300"
-            :disabled="isLoading"
-          >
-            {{ isLoading ? 'Logging in...' : 'Login' }}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div v-else class="h-[calc(100vh-60px)] flex flex-col md:flex-row">
+  <div v-if="isAuthenticated" class="h-[calc(100vh-60px)] flex flex-col md:flex-row">
     <!-- Mobile Header -->
     <div class="md:hidden flex items-center justify-between p-4 bg-primary text-white">
       <h1 class="text-lg font-bold">Admin Dashboard</h1>
@@ -184,16 +142,14 @@ import { useSalesStore } from '~/stores/sales'
 import SalesLogTable from '~/components/SalesLogTable.vue'
 import SalesMetrics from '~/components/SalesMetrics.vue'
 
-const username = ref('')
-const password = ref('')
-const error = ref('')
-const isLoading = ref(false)
-const isLoggedIn = ref(false)
+const router = useRouter()
+const isAuthenticated = ref(false)
 const isMenuOpen = ref(false)
 const showProductModal = ref(false)
 const showSaleModal = ref(false)
 const selectedProduct = ref(null)
 const activeTab = ref('products')
+const isLoading = ref(false)
 
 const productStore = useProductStore()
 const salesStore = useSalesStore()
@@ -205,43 +161,23 @@ const navItems = [
   { id: 'reports', label: 'Reports', icon: 'bi-graph-up' }
 ]
 
-onMounted(() => {
-  isLoggedIn.value = localStorage.getItem('isAdmin') === 'true'
-  if (isLoggedIn.value) {
-    productStore.fetchProducts()
-    salesStore.fetchSales()
+onMounted(async () => {
+  const session = useCookie('admin-session')
+  if (!session.value) {
+    router.push('/admin/login')
+    return
   }
+  isAuthenticated.value = true
+  productStore.fetchProducts()
+  salesStore.fetchSales()
 })
-
-const handleLogin = async () => {
-  try {
-    isLoading.value = true
-    const response = await $fetch('/api/admin/login', {
-      method: 'POST',
-      body: { 
-        username: username.value, 
-        password: password.value 
-      }
-    })
-    
-    if (response.success) {
-      localStorage.setItem('isAdmin', 'true')
-      isLoggedIn.value = true
-      error.value = ''
-      productStore.fetchProducts()
-      salesStore.fetchSales()
-    }
-  } catch (err) {
-    error.value = err.data?.message || 'Login failed'
-  } finally {
-    isLoading.value = false
-  }
-}
 
 const logout = async () => {
   await $fetch('/api/admin/logout', { method: 'POST' })
-  localStorage.removeItem('isAdmin')
-  isLoggedIn.value = false
+  const session = useCookie('admin-session')
+  session.value = null
+  isAuthenticated.value = false
+  router.push('/admin/login')
 }
 
 const selectTab = (tab) => {

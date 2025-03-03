@@ -2,46 +2,33 @@
   <div class="min-h-screen flex items-center justify-center bg-secondary">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
       <h2 class="text-2xl font-bold text-dark mb-6 text-center">Admin Login</h2>
-      
+
       <form @submit.prevent="handleLogin" class="space-y-4">
         <div>
           <label class="block text-sm font-medium text-dark mb-1">Username</label>
-          <input 
-            v-model="username" 
-            type="text"
-            required
-            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary"
-          >
+          <input v-model="username" type="text" required
+            class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary" />
         </div>
 
-        <div>
+        <div class="relative">
           <label class="block text-sm font-medium text-dark mb-1">Password</label>
-          <div class="relative">
-            <input 
-              v-model="password" 
-              :type="showPassword ? 'text' : 'password'"
-              required
-              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary pr-10"
-            >
-            <button 
-              type="button"
-              @click="togglePassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-            >
+          <div class="flex">
+            <input ref="passwordInput" v-model="password" :type="showPassword ? 'text' : 'password'"
+              autocomplete="current-password" required
+              class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary" />
+            <button type="button" class="absolute right-2 top-[29px] p-1" @click="togglePassword" tabindex="-1"
+              v-if="password.length > 0">
               <i class="bi" :class="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
             </button>
           </div>
         </div>
 
-        <div v-if="error" class="!text-red-500 text-sm">
+        <div v-if="error" class="text-sm mt-2 error-message">
           {{ error }}
         </div>
 
-        <button 
-          type="submit"
-          class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors"
-          :disabled="loading"
-        >
+        <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors"
+          :disabled="loading">
           {{ loading ? 'Logging in...' : 'Login' }}
         </button>
       </form>
@@ -50,34 +37,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
 
-const router = useRouter()
 const username = ref('')
 const password = ref('')
+const showPassword = ref(false)
 const error = ref('')
 const loading = ref(false)
-const showPassword = ref(false)
+const passwordInput = ref(null)
+const authState = useAuthState()
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
-  // For debugging: Uncomment to log the current state
-  // console.log('Password visibility:', showPassword.value)
+  setTimeout(() => {
+    passwordInput.value.focus()
+    const length = password.value.length
+    passwordInput.value.setSelectionRange(length, length)
+  }, 0)
 }
 
+watch(password, (newVal) => {
+  // Keep track of password changes for toggle button visibility
+})
+
 const handleLogin = async () => {
+  loading.value = true
+  error.value = ''
+
   try {
-    loading.value = true
-    error.value = ''
-    
     const response = await $fetch('/api/admin/login', {
       method: 'POST',
       body: { username: username.value, password: password.value }
     })
-    
+
     if (response.success) {
-      router.push('/admin')
+      const session = useCookie('admin-session')
+      // Verify cookie exists before navigation
+      if (session.value) {
+        await navigateTo('/admin', {
+          replace: true,
+          force: true
+        })
+      }
     }
   } catch (err) {
     error.value = err.data?.message || 'Login failed'
@@ -86,3 +87,14 @@ const handleLogin = async () => {
   }
 }
 </script>
+
+<style>
+.error-message {
+  color: #ef4444 !important;
+}
+
+[class*='theme-'] .error-message,
+:root .error-message {
+  color: #ef4444 !important;
+}
+</style>

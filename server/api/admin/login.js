@@ -25,8 +25,9 @@ export default defineEventHandler(async (event) => {
       .update(Date.now().toString() + clientIp)
       .digest('hex')
     
+    // Remove httpOnly flag so client-side code can read it
     setCookie(event, 'admin-session', session, {
-      httpOnly: true,
+      httpOnly: false, // changed from true to false for client-side access
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 60 * 60 * 24
