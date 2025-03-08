@@ -52,18 +52,21 @@ const chartOptions = {
   maintainAspectRatio: false,
   plugins: {
     legend: {
-      position: 'bottom',
+      position: window.innerWidth < 768 ? 'bottom' : 'right',
       labels: {
-        padding: 20,
+        padding: window.innerWidth < 768 ? 10 : 20,
         usePointStyle: true,
-        pointStyle: 'circle'
+        pointStyle: 'circle',
+        font: {
+          size: window.innerWidth < 768 ? 10 : 11
+        }
       }
     },
     tooltip: {
       callbacks: {
         label: (context) => {
           const value = context.dataset.rawData[context.dataIndex]
-          return `GH₵${value.toFixed(2)} (${context.raw.toFixed(1)}% of total revenue)`
+          return `GH₵${value.toFixed(2)} (${context.raw.toFixed(1)}%)`
         }
       }
     }
@@ -74,6 +77,7 @@ const chartOptions = {
 <style scoped>
 .chart-container {
   height: 250px;
+
   @media (min-width: 768px) {
     height: 300px;
   }

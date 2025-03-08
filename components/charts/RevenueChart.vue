@@ -19,31 +19,27 @@ const props = defineProps({
 })
 
 const chartData = computed(() => {
-  const dates = []
-  const revenues = []
-  
   const dailyRevenue = props.sales.reduce((acc, sale) => {
-    const date = new Date(sale.timestamp).toLocaleDateString()
+    const date = new Date(sale.timestamp).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short'
+    })
     acc[date] = (acc[date] || 0) + sale.total
     return acc
   }, {})
 
-  Object.entries(dailyRevenue)
+  const sortedEntries = Object.entries(dailyRevenue)
     .sort((a, b) => new Date(a[0]) - new Date(b[0]))
-    .forEach(([date, revenue]) => {
-      dates.push(date)
-      revenues.push(revenue)
-    })
 
   return {
-    labels: dates,
+    labels: sortedEntries.map(([date]) => date),
     datasets: [{
       label: 'Daily Revenue',
       backgroundColor: 'rgba(116, 185, 255, 0.2)',
       borderColor: '#4A90E2',
       pointBackgroundColor: '#FF6B6B',
       pointBorderColor: '#4A90E2',
-      data: revenues,
+      data: sortedEntries.map(([, revenue]) => revenue),
       fill: true,
       tension: 0.4
     }]
@@ -67,7 +63,21 @@ const chartOptions = {
     y: {
       beginAtZero: true,
       ticks: {
-        callback: (value) => `GH₵${value}`
+        callback: (value) => `GH₵${value}`,
+        font: {
+          size: 10
+        },
+        maxTicksLimit: 6
+      }
+    },
+    x: {
+      ticks: {
+        maxRotation: 45,
+        minRotation: 45,
+        font: {
+          size: 10
+        },
+        maxTicksLimit: 8
       }
     }
   }
@@ -77,6 +87,7 @@ const chartOptions = {
 <style scoped>
 .chart-container {
   height: 250px;
+
   @media (min-width: 768px) {
     height: 300px;
   }

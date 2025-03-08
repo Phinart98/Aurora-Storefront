@@ -37,7 +37,7 @@ const chartData = computed(() => {
     .sort((a, b) => b[1].revenue - a[1].revenue)
     .slice(0, 5)
     .map(([name, data]) => ({
-      name,
+      name: name.length > 15 ? name.substring(0, 15) + '...' : name,
       revenue: data.revenue
     }))
 
@@ -60,7 +60,6 @@ const chartData = computed(() => {
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
-  indexAxis: 'y',
   plugins: {
     legend: {
       display: false
@@ -72,10 +71,23 @@ const chartOptions = {
     }
   },
   scales: {
-    x: {
+    y: {
       beginAtZero: true,
       ticks: {
-        callback: (value) => `GH₵${value}`
+        callback: (value) => `GH₵${value}`,
+        font: {
+          size: 10
+        },
+        maxTicksLimit: 6
+      }
+    },
+    x: {
+      ticks: {
+        maxRotation: 45,
+        minRotation: 45,
+        font: {
+          size: 10
+        }
       }
     }
   }
@@ -85,6 +97,7 @@ const chartOptions = {
 <style scoped>
 .chart-container {
   height: 250px;
+
   @media (min-width: 768px) {
     height: 300px;
   }

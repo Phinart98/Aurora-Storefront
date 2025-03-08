@@ -63,3 +63,14 @@
   --color-accent: #365314;
   --color-accent-light: #3F6212;
 }
+
+/* Sunset Theme */
+.theme-sunset {
+  --color-primary: #F97316;
+  --color-primary-light: #FFEDD5;
+  --color-primary-dark: #EA580C;
+  --color-secondary: #FFFFFF;
+  --color-secondary-dark: #FFF7ED;
+  --color-accent: #431407;
+  --color-accent-light: #9A3412;
+}
